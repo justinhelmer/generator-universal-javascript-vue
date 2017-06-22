@@ -1,0 +1,29 @@
+{
+  "name": "generator-universal-javascript-vue",
+  "version": "0.1.0",
+  "description": "A Yeoman generator for universal-javascript-vue.",
+  "author": "Justin Helmer",
+  "license": "MIT",
+  "homepage": "https://github.com/justinhelmer/generator-universal-javascript-vue#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/justinhelmer/generator-universal-javascript-vue.git"
+  },
+  "engines": {
+    "node": "6.x",
+    "npm": "3.x"
+  },
+  "bugs": {
+    "url": "https://github.com/justinhelmer/generator-universal-javascript-vue/issues"
+  },
+  "files": [
+    "app"
+  ],
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "dependencies": {
+    "universal-javascript-vue": "^0.6.1",
+    "yeoman-generator": "^1.1.1"
+  }
+}
