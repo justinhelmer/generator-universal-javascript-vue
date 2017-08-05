@@ -1,6 +1,10 @@
 # <%= config.title %>
 
-A fully-isomorphic (universal) ECMAScript 6 boilerplate based on [Vue.js](https://vuejs.org/).
+A fully-isomorphic (universal) ES6/ES7 boilerplate based on [Vue.js](https://vuejs.org/).
+
+> For a more complete framework based on similar technologies, consider [Nuxt](https://nuxtjs.org/).
+> If you are looking for something more nuts-and-bolts, and/or are interested in the additional [features](#features)
+> offered, then you came to the right place.
 
 ## When to use this
 
@@ -11,9 +15,8 @@ Some of the possible reasons to choose this over something else:
 - If you have tried (or looked into) these, but found them too abstracted, or require too much boilerplate code:
     - [Electrode](http://www.electrode.io/)
     - [Next.js](https://zeit.co/blog/next2)
-    - [Vue](https://vuejs.org/)
-    - [Nuxt](https://nuxtjs.org/) _- Special thanks to the developers of Vue/Nuxt for articulating the building blocks of `Vue.js` so well._
-- If you don't want to use [React](https://facebook.github.io/react/) / [Redux](https://facebook.github.io/react/)
+    - [Vue](https://vuejs.org/) / [Nuxt](https://nuxtjs.org/)
+- If you don't want to use [React](https://facebook.github.io/react/) / [Redux](https://facebook.github.io/react/) (see this [comparison guide](https://vuejs.org/v2/guide/comparison.html#React))
 
 ## Features
 

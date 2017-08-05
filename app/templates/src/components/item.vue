@@ -14,7 +14,7 @@
     asyncData ({ store, route }) {
       return store.dispatch('fetch', {
         id: route.params.id,
-        endpoint: '/api/item',
+        endpoint: '<% if (features.keystone) { %>/cms/item<% } else { %>/api/item<% } %>',
         store: 'items'
       });
     },
