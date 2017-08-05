@@ -16,8 +16,31 @@ fs.remove(templatePath)
       replace: '# <%= config.title %>'
     },
 
-    featureWrap('foundation', '- (optional) [Foundation](http://foundation.zurb.com/) integration\n'),
-    featureWrap('fontawesome', '- (optional) [Font Awesome](http://fontawesome.io/) integration\n')
+    featureWrap('foundation', '- _(optional)_ Full [Foundation](http://foundation.zurb.com/) integration\n'),
+    featureWrap('fontawesome', '- _(optional)_ Full [Font Awesome](http://fontawesome.io/) integration\n'),
+    featureWrap('keystone', '- _(optional)_ Full content management system (CMS) built on [KeystoneJS](http://keystonejs.com/)\n'),
+    featureWrap('proxy', '- _(optional)_ Centralized API proxy using [Axios](https://github.com/vuejs/vuex), with ready-to-go [data prefetching](https://ssr.vuejs.org/en/data.html) and a built-in mock server using [JSON Server](https://github.com/typicode/json-server).\n'),
+
+    featureWrap('foundation', `client: {
+    // only applicable if using Foundation (yeoman generator option)
+    foundation: {
+      plugins: [] // JS plugins to bundle with the client
+    }
+  },`),
+
+    featureWrap('keystone', `// only applicable if using KeystoneJS (yeoman generator option)
+    keystone: {
+      base: '/cms',
+      mock: false
+    },`),
+
+    featureWrap('proxy', `// only applicable if using the API proxy (yeoman generator option)
+    proxy: {
+      base: '/api',
+      target: 'https://api.example-host.com',
+      headers: {},
+      mock: true
+    }`),
   ]))
   .then(() => templatize('config/index.js', [
     {
@@ -45,7 +68,9 @@ fs.remove(templatePath)
   .then(() => templatize('src/app.vue', [
 
     featureWrap('foundation', `beforeMount: function () {
-      require('./lib/foundation')();
+      require('./lib/foundation')({
+        plugins: config.client.foundation.plugins || []
+      });
     }`),
 
     featureWrap('foundation', `@import \'./css/settings\';
@@ -66,12 +91,22 @@ fs.remove(templatePath)
   ]))
   .then(() => templatize('src/components/global/header.vue', [
     featureWrap('foundation', ' class="top-bar"'),
+    featureWrap('foundation', ' class="top-bar-left"'),
+    featureWrap('foundation', ' class="top-bar-right"'),
     featureWrap('foundation', ' class="menu"'),
+    featureWrap('foundation', ' class="menu align-right"'),
     featureWrap('foundation', '<i class="fa fa-home"></i><span class="show-for-medium">Home</span>', 'Home'),
+    featureWrap('foundation', '<i class="fa fa-cog"></i><span class="show-for-medium">Admin Dashboard</span>', 'Admin Dashboard'),
 
     featureWrap('foundation', `@import '../../css/settings';
 
-    $white: get-color(white);`, '\n    $white: #fff;')
+    $white: get-color(white);`, '\n    $white: #fff;'),
+
+    featureWrap('foundation', `@include breakpoint(small only) {
+        .menu.align-right li:last-child i {
+            margin: 0;
+        }
+    }`),
   ]))
   .then(() => templatize('src/components/home.vue', [
     featureWrap('foundation', ' class="grid-container grid-container-padded"'),
@@ -87,6 +122,29 @@ fs.remove(templatePath)
   .then(() => templatize('src/components/item.vue', [
     featureWrap('foundation', ' class="grid-container grid-container-padded"'),
     featureWrap('foundation', ' class="grid-y"')
+  ]))
+  .then(() => templatize('server/index.js', [
+    featureWrap('keystone', `const keystone = require('keystone');
+require('./models');
+
+keystone.init(require('../config/keystone.config'));
+keystone.set('routes', require('./routes'));
+
+keystone.start(() => {
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('Compiling...');
+  }
+});`, `const express = require('express');
+const config = require('../config');
+
+const app = express();
+require('./routes')(app);
+
+app.listen(config.server.port);`)
+  ]))
+  .then(() => templatize('server/routes/index.js', [
+    featureWrap('keystone', ' require(\'../keystone\')(app);'),
+    featureWrap('proxy', ' require(\'../proxy\')(app);'),
   ]));
 
 function featureWrap(feature, search, disabled) {

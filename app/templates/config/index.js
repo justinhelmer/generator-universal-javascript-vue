@@ -1,12 +1,21 @@
-require('dotenv').load();
-
 module.exports = {
-  template: {
-    title: '<%= config.title %>'
+  title: '<%= config.title %>',
+  client: {
+    foundation: {
+      plugins: []
+    }
   },
-  proxy: {
-    target: '',
-    headers: {},
-    mock: true
+  server: {
+    port: process.env.PORT || 3000,
+    keystone: {
+      base: '/cms',
+      mock: false
+    },
+    proxy: {
+      base: '/api',
+      target: '',
+      headers: {},
+      mock: true
+    }
   }
 };

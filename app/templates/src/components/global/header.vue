@@ -1,13 +1,24 @@
 <template>
     <header>
         <nav<% if (features.foundation) { %> class="top-bar"<% } %>>
-            <ul<% if (features.foundation) { %> class="menu"<% } %>>
-                <li>
-                    <router-link :to="{ name: 'home' }">
-                        <% if (features.foundation) { %><i class="fa fa-home"></i><span class="show-for-medium">Home</span><% } else { %>Home<% } %>
-                    </router-link>
-                </li>
-            </ul>
+            <div<% if (features.foundation) { %> class="top-bar-left"<% } %>>
+                <ul<% if (features.foundation) { %> class="menu"<% } %>>
+                    <li>
+                        <router-link :to="{ name: 'home' }">
+                            <% if (features.foundation) { %><i class="fa fa-home"></i><span class="show-for-medium">Home</span><% } else { %>Home<% } %>
+                        </router-link>
+                    </li>
+                </ul>
+            </div>
+            <div<% if (features.foundation) { %> class="top-bar-right"<% } %>>
+                <ul<% if (features.foundation) { %> class="menu align-right"<% } %>>
+                    <li>
+                        <a href="/keystone">
+                            <% if (features.foundation) { %><i class="fa fa-cog"></i><span class="show-for-medium">Admin Dashboard</span><% } else { %>Admin Dashboard<% } %>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </nav>
     </header>
 </template>
@@ -25,5 +36,11 @@
     $white: #fff;<% } %>
 
     a {  color: $white;  }
-    i {  margin-right: 1em; }
+    i { margin-right: 1em; }
+
+    <% if (features.foundation) { %>@include breakpoint(small only) {
+        .menu.align-right li:last-child i {
+            margin: 0;
+        }
+    }<% } %>
 </style>
