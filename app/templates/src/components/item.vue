@@ -14,7 +14,7 @@
     asyncData ({ store, route }) {
       return store.dispatch('fetch', {
         id: route.params.id,
-        endpoint: '/cms/item',
+        endpoint: '/api/item',
         store: 'items'
       });
     },

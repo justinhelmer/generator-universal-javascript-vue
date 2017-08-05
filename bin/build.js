@@ -46,7 +46,25 @@ fs.remove(templatePath)
     {
       search: 'Universal JavaScript - Vue',
       replace: '<%= config.title %>'
+    },
+
+    featureWrap('foundation', `client: {
+    foundation: {
+      plugins: [] // JS plugins to bundle with the client
     }
+  },`),
+
+    featureWrap('keystone', `keystone: {
+      base: '/cms',
+      mock: false
+    },`),
+
+    featureWrap('proxy', `proxy: {
+      base: '/api',
+      target: '',
+      headers: {},
+      mock: true
+    }`),
   ]))
   .then(() => templatize('config/css-loader.config.js', [
     featureWrap('fontawesome', `alias: {
@@ -90,6 +108,16 @@ fs.remove(templatePath)
     featureWrap('fontawesome', '@import \'font-awesome\';')
   ]))
   .then(() => templatize('src/components/global/header.vue', [
+    featureWrap('keystone', `<div class="top-bar-right">
+                <ul class="menu align-right">
+                    <li>
+                        <a href="/keystone">
+                            <i class="fa fa-cog"></i><span class="show-for-medium">Admin Dashboard</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>`),
+
     featureWrap('foundation', ' class="top-bar"'),
     featureWrap('foundation', ' class="top-bar-left"'),
     featureWrap('foundation', ' class="top-bar-right"'),
@@ -100,9 +128,12 @@ fs.remove(templatePath)
 
     featureWrap('foundation', `@import '../../css/settings';
 
-    $white: get-color(white);`, '\n    $white: #fff;'),
+    $white: get-color(white);
 
-    featureWrap('foundation', `@include breakpoint(small only) {
+    a {  color: $white;  }
+    i { margin-right: 1em; }
+
+    @include breakpoint(small only) {
         .menu.align-right li:last-child i {
             margin: 0;
         }
@@ -116,10 +147,12 @@ fs.remove(templatePath)
     $black: get-color(black);`, '\n    $black: #000;')
   ]))
   .then(() => templatize('src/components/items.vue', [
+    featureWrap('keystone', '/cms/item', '/api/item'),
     featureWrap('foundation', ' class="grid-container grid-container-padded"'),
     featureWrap('foundation', ' class="grid-y"')
   ]))
   .then(() => templatize('src/components/item.vue', [
+    featureWrap('keystone', '/cms/item', '/api/item'),
     featureWrap('foundation', ' class="grid-container grid-container-padded"'),
     featureWrap('foundation', ' class="grid-y"')
   ]))

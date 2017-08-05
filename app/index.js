@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const chalk = require('chalk');
 const Generator = require('yeoman-generator');
 
 module.exports = class extends Generator {
@@ -41,6 +42,10 @@ module.exports = class extends Generator {
       .then(answers => {
         this.config = _.pick(answers, ['name', 'title']);
         this.features = _.pick(answers, ['foundation', 'fontawesome', 'keystone', 'proxy']);
+
+        if (!this.features.proxy && !this.features.keystone) {
+          this.log(chalk.bold.yellow('WARN:'), 'By excluding both keystone and the api proxy, some features in the generated boilerplate may not work');
+        }
       })
   }
 
@@ -62,6 +67,11 @@ module.exports = class extends Generator {
       this.fs.delete(this.destinationPath('bin/start-all-servers.js'));
       this.fs.delete(this.destinationPath('config/keystone.config.js'));
       this.fs.delete(this.destinationPath('server/keystone'));
+      this.fs.delete(this.destinationPath('server/models'));
+    }
+
+    if (!this.features.proxy) {
+      this.fs.delete(this.destinationPath('server/proxy'));
     }
 
     if (!this.features.proxy && !this.features.keystone) {

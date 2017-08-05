@@ -7,15 +7,15 @@ module.exports = {
   },
   server: {
     port: process.env.PORT || 3000,
-    keystone: {
+    <% if (features.keystone) { %>keystone: {
       base: '/cms',
       mock: false
-    },
-    proxy: {
+    },<% } %>
+    <% if (features.proxy) { %>proxy: {
       base: '/api',
       target: '',
       headers: {},
       mock: true
-    }
+    }<% } %>
   }
 };

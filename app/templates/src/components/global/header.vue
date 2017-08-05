@@ -10,7 +10,7 @@
                     </li>
                 </ul>
             </div>
-            <div<% if (features.foundation) { %> class="top-bar-right"<% } %>>
+            <% if (features.keystone) { %><div<% if (features.foundation) { %> class="top-bar-right"<% } %>>
                 <ul<% if (features.foundation) { %> class="menu align-right"<% } %>>
                     <li>
                         <a href="/keystone">
@@ -18,7 +18,7 @@
                         </a>
                     </li>
                 </ul>
-            </div>
+            </div><% } %>
         </nav>
     </header>
 </template>
@@ -32,13 +32,12 @@
 <style lang="scss" scoped>
     <% if (features.foundation) { %>@import '../../css/settings';
 
-    $white: get-color(white);<% } else { %>
-    $white: #fff;<% } %>
+    $white: get-color(white);
 
     a {  color: $white;  }
     i { margin-right: 1em; }
 
-    <% if (features.foundation) { %>@include breakpoint(small only) {
+    @include breakpoint(small only) {
         .menu.align-right li:last-child i {
             margin: 0;
         }
