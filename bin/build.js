@@ -91,15 +91,16 @@ fs.remove(templatePath)
       });
     }`),
 
-    featureWrap('foundation', `@import './css/settings';
-    @import 'foundation';
-    @import 'motion-ui';
+    featureWrap('foundation', `@import \'./css/settings\';
+    @import \'foundation\';
+    @import \'motion-ui\';
 
     @include foundation-global-styles;
     @include foundation-menu;
     @include foundation-top-bar;
     @include foundation-xy-grid-classes;
     @include foundation-typography;
+    @include foundation-button;
     @include foundation-visibility-classes;
     @include foundation-flex-classes;
     @include motion-ui-transitions;
@@ -154,11 +155,15 @@ fs.remove(templatePath)
         }
     }`),
   ]))
+  .then(() => templatize('src/components/home.vue', [
+    featureWrap('foundation', ' class="button"')
+  ]))
   .then(() => templatize('src/components/items.vue', [
     featureWrap('keystone', '/cms/item', '/api/item')
   ]))
   .then(() => templatize('src/components/item.vue', [
-    featureWrap('keystone', '/cms/item', '/api/item')
+    featureWrap('keystone', '/cms/item', '/api/item'),
+    featureWrap('foundation', ' class="button"')
   ]))
   .then(() => templatize('server/index.js', [
     featureWrap('keystone', `const keystone = require('keystone');
