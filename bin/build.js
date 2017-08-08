@@ -91,9 +91,9 @@ fs.remove(templatePath)
       });
     }`),
 
-    featureWrap('foundation', `@import \'./css/settings\';
-    @import \'foundation\';
-    @import \'motion-ui\';
+    featureWrap('foundation', `@import './css/settings';
+    @import 'foundation';
+    @import 'motion-ui';
 
     @include foundation-global-styles;
     @include foundation-menu;
@@ -104,6 +104,21 @@ fs.remove(templatePath)
     @include foundation-flex-classes;
     @include motion-ui-transitions;
     @include motion-ui-animations;`),
+
+    featureWrap('foundation', `h1 {
+        border-bottom: $hr-border;
+    }
+
+    .content {
+        background: $white;
+        border: 1px solid $light-gray;
+        max-width: $global-width;
+        margin: 0 auto;
+
+        @include -zf-breakpoint-value('auto', $grid-container-padding) {
+            padding: 0 rem-calc($-zf-bp-value) / 2
+        }
+    }`),
 
     featureWrap('fontawesome', '@import \'font-awesome\';')
   ]))
@@ -139,22 +154,11 @@ fs.remove(templatePath)
         }
     }`),
   ]))
-  .then(() => templatize('src/components/home.vue', [
-    featureWrap('foundation', ' class="grid-container grid-container-padded"'),
-    featureWrap('foundation', ' class="grid-y"'),
-    featureWrap('foundation', `@import '../css/settings';
-
-    $black: get-color(black);`, '\n    $black: #000;')
-  ]))
   .then(() => templatize('src/components/items.vue', [
-    featureWrap('keystone', '/cms/item', '/api/item'),
-    featureWrap('foundation', ' class="grid-container grid-container-padded"'),
-    featureWrap('foundation', ' class="grid-y"')
+    featureWrap('keystone', '/cms/item', '/api/item')
   ]))
   .then(() => templatize('src/components/item.vue', [
-    featureWrap('keystone', '/cms/item', '/api/item'),
-    featureWrap('foundation', ' class="grid-container grid-container-padded"'),
-    featureWrap('foundation', ' class="grid-y"')
+    featureWrap('keystone', '/cms/item', '/api/item')
   ]))
   .then(() => templatize('server/index.js', [
     featureWrap('keystone', `const keystone = require('keystone');

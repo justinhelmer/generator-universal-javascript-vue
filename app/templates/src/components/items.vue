@@ -1,13 +1,11 @@
 <template>
-    <div id="items"<% if (features.foundation) { %> class="grid-container grid-container-padded"<% } %>>
-        <div<% if (features.foundation) { %> class="grid-y"<% } %>>
-            <h1>Items</h1>
-            <ul class="list">
-                <li v-for="item in items">
-                    <router-link :to="{ name: 'item', params: { id: item._id } }">{{item.name}}</router-link>
-                </li>
-            </ul>
-        </div>
+    <div id="items" class="content">
+        <h1>Items</h1>
+        <ul class="list">
+            <li v-for="item in items">
+                <router-link :to="{ name: 'item', params: { id: item._id } }">{{item.name}}</router-link>
+            </li>
+        </ul>
     </div>
 </template>
 
@@ -29,17 +27,3 @@
     }
   }
 </script>
-
-<style lang="scss" scoped>
-    $list-margin: 5px;
-
-    ul.list {
-        margin: 0;
-        padding: 0;
-
-        li {
-            display: inline-block;
-            margin: 0 $list-margin 0 0;
-        }
-    }
-</style>
