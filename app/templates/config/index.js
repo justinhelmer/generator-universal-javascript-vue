@@ -1,21 +1,11 @@
 module.exports = {
   title: '<%= config.title %>',
-  client: {
-    foundation: {
-      plugins: []
-    }
+  port: process.env.PORT || 3000,
+  api: {
+    base: '/api',
+    mock: true
   },
-  server: {
-    port: process.env.PORT || 3000,
-    <% if (features.keystone) { %>keystone: {
-      base: '/cms',
-      mock: false
-    },<% } %>
-    <% if (features.proxy) { %>proxy: {
-      base: '/api',
-      target: '',
-      headers: {},
-      mock: true
-    }<% } %>
-  }
+  <% if (features.foundation) { %>foundation: {
+    plugins: []
+  }<% } %>
 };

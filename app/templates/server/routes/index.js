@@ -1,6 +1,10 @@
 module.exports = app => {
+  app.use((req, res, next) => {
+    res.locals = {};
+    next();
+  });
+
   require('./static')(app);
- <% if (features.keystone) { %> require('../keystone')(app);<% } %>
- <% if (features.proxy) { %> require('../proxy')(app);<% } %>
+  require('./api')(app);
   require('./app')(app);
 };

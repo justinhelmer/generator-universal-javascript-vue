@@ -10,22 +10,38 @@
                     </li>
                 </ul>
             </div>
-            <% if (features.keystone) { %><div<% if (features.foundation) { %> class="top-bar-right"<% } %>>
+            <div<% if (features.foundation) { %> class="top-bar-right"<% } %>>
                 <ul<% if (features.foundation) { %> class="menu align-right"<% } %>>
+                    <li v-if="uid">
+                        <router-link :to="{ name: 'profile' }">
+                            <% if (features.foundation) { %><i class="fa fa-user"></i><span class="show-for-medium">Profile</span><% } else { %>Profile<% } %>
+                        </router-link>
+                    </li>
                     <li>
-                        <a href="/keystone">
-                            <% if (features.foundation) { %><i class="fa fa-cog"></i><span class="show-for-medium">Admin Dashboard</span><% } else { %>Admin Dashboard<% } %>
-                        </a>
+                        <router-link v-if="!uid" :to="{ name: 'login' }">
+                            <% if (features.foundation) { %><i class="fa fa-sign-in"></i><span class="show-for-medium">Login</span><% } else { %>Login<% } %>
+                        </router-link>
+                        <router-link v-if="uid" :to="{ name: 'logout' }">
+                            <% if (features.foundation) { %><i class="fa fa-sign-out"></i><span class="show-for-medium">Logout</span><% } else { %>Logout<% } %>
+                        </router-link>
                     </li>
                 </ul>
-            </div><% } %>
+            </div>
         </nav>
     </header>
 </template>
 
 <script>
+  import Vue from 'vue';
+
   export default {
-    name: 'header'
+    name: 'header',
+
+    computed: {
+      uid() {
+        return this.$store.state.global.user._id
+      }
+    }
   }
 </script>
 

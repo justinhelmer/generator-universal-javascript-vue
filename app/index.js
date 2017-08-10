@@ -32,31 +32,23 @@ module.exports = class extends Generator {
           type: 'confirm',
           name: 'keystone',
           message: 'Would you like to include Keystone CMS integration?'
-        },
-        {
-          type: 'confirm',
-          name: 'proxy',
-          message: 'Would you like to include API proxy integration?'
         }
       ])
       .then(answers => {
         this.config = _.pick(answers, ['name', 'title']);
-        this.features = _.pick(answers, ['foundation', 'fontawesome', 'keystone', 'proxy']);
-
-        if (!this.features.proxy && !this.features.keystone) {
-          this.log(chalk.bold.yellow('WARN:'), 'By excluding both keystone and the api proxy, some features in the generated boilerplate may not work');
-        }
+        this.features = _.pick(answers, ['foundation', 'fontawesome', 'keystone']);
       })
   }
 
   write() {
     this.fs.copyTpl(
-      this.templatePath('**/*.!(png)'),
+      this.templatePath('**/*.@(html|js|md)'),
       this.destinationPath(),
       { config: this.config, features: this.features }
     );
 
-    this.fs.copy(this.templatePath('**/*.png'), this.destinationPath());
+    this.fs.copy(this.templatePath('**/.*'), this.destinationPath()); // dotfiles
+    this.fs.copy(this.templatePath('**/*.@(png|jpg|gif)'), this.destinationPath());
 
     if (!this.features.foundation) {
       this.fs.delete(this.destinationPath('src/lib/foundation.js'));
@@ -67,15 +59,7 @@ module.exports = class extends Generator {
       this.fs.delete(this.destinationPath('bin/start-all-servers.js'));
       this.fs.delete(this.destinationPath('config/keystone.config.js'));
       this.fs.delete(this.destinationPath('server/keystone'));
-      this.fs.delete(this.destinationPath('server/models'));
-    }
-
-    if (!this.features.proxy) {
-      this.fs.delete(this.destinationPath('server/proxy'));
-    }
-
-    if (!this.features.proxy && !this.features.keystone) {
-      this.fs.delete(this.destinationPath('server/mockapi'));
+      this.fs.delete(this.destinationPath('server/routes/api/query.js'));
     }
   }
 
@@ -86,7 +70,7 @@ module.exports = class extends Generator {
     let scripts = pkg.scripts;
 
     if (!this.features.keystone) {
-      dependencies = _.omit(dependencies, ['keystone', 'mongodb']);
+      dependencies = _.omit(dependencies, ['connect-mongo', 'keystone', 'mongodb']);
       scripts.dev = 'node server';
     }
 
@@ -98,10 +82,6 @@ module.exports = class extends Generator {
       devDependencies = _.omit(devDependencies, ['font-awesome', 'url-loader']);
     }
 
-    if (!this.features.proxy && !this.features.keystone) {
-      devDependencies = _.omit(devDependencies, 'json-server');
-    }
-
     this.fs.write(this.destinationPath('package.json'), `{
   "name": "` + this.config.name + `",
   "version": "0.0.1",
@@ -111,9 +91,9 @@ module.exports = class extends Generator {
 }`);
   }
 
-  install() {
-    this.installDependencies({ npm: true, bower: false, yarn: false, callback: () => {
-      this.log('Done! Use `npm run dev` to launch the application')
-    }});
-  }
+  // install() {
+  //   this.installDependencies({ npm: true, bower: false, yarn: false, callback: () => {
+  //     this.log('Done! Use `npm run dev` to launch the application')
+  //   }});
+  // }
 };

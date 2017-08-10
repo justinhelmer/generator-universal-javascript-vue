@@ -23,16 +23,17 @@ Some of the possible reasons to choose this over something else:
 The following features are _centralized_, meaning they run both client-side and server-side:
   - Centralized routing using [vue-router](https://github.com/vuejs/vue-router), with a strong focus on code-splitting (JS+CS+HTML components)
   - Centralized state management using [Vuex](https://github.com/vuejs/vuex), and DOM hydration using [vuex-router-sync](https://github.com/vuejs/vuex-router-sync)
-  <% if (features.proxy) { %>- _(optional)_ Centralized API proxy using [Axios](https://github.com/vuejs/vuex), with ready-to-go [data prefetching](https://ssr.vuejs.org/en/data.html) and a built-in mock server using [JSON Server](https://github.com/typicode/json-server).
-<% } %>
+  - Centralized API interface with ready-to-go [data prefetching](https://ssr.vuejs.org/en/data.html) and a built-in mock server using [JSON Server](https://github.com/typicode/json-server).
+
 In addition:
 - Full [Babel](https://babeljs.io/) support
 - Full [Vue](https://vuejs.org/) support
 - Full [Hot reloading (HMR)](https://webpack.js.org/concepts/hot-module-replacement/) support
-- Full [CSS Modules](https://glenmaddern.com/articles/css-modules) and [cssnext](http://cssnext.io/) support, with [SASS](http://sass-lang.com/) integration
+- Full [CSS Modules](https://glenmaddern.com/articles/css-modules) support, with [SASS](http://sass-lang.com/) integration
+- Full [PostCSS](http://postcss.org/) integration, with [cssnext](http://cssnext.io/) and [cssnano](http://cssnano.co/) support
 <% if (features.foundation) { %>- _(optional)_ Full [Foundation](http://foundation.zurb.com/) integration
 <% } %><% if (features.fontawesome) { %>- _(optional)_ Full [Font Awesome](http://fontawesome.io/) integration
-<% } %><% if (features.keystone) { %>- _(optional)_ Full content management system (CMS) built on [KeystoneJS](http://keystonejs.com/)
+<% } %><% if (features.keystone) { %>- _(optional)_ Full content management system (CMS) built on [KeystoneJS](http://keystonejs.com/), including API routes for authenticating and retrieving data
 <% } %>- [Webpack 2](https://webpack.js.org/) integration, with the following chunk optimizations:
   - Extracts all vendor dependencies (i.e. `node_modules`) into a separate chunk for better caching
   - Extracts the `webpack` runtime and manifest into a named chunk to avoid hash changing on every build
@@ -81,6 +82,25 @@ npm run build
 npm start
 ```
 
+<% if (features.keystone) { %>#### If using [KeystoneJS](http://keystonejs.com/) (yeoman generator option):
+
+When serving in **production** mode, the assumption is that a `mongo` instance is already running, at the url specified by `config/keystone.config.js`:
+
+```js
+module.exports = {
+  // ...
+  'mongo': 'mongodb://localhost:27017/' + pkg.name,
+  // ...
+};
+```
+
+You can also launch the a local `mongo` instance using:
+
+```bash
+npm run db
+```
+> Simply an alias for `mongod`
+<% } %>
 ## Configuration
 
 The following config properties (`config/index.js`) are recognized by the boilerplate:
@@ -88,31 +108,25 @@ The following config properties (`config/index.js`) are recognized by the boiler
 ```js
 module.exports = {
   title: 'Universal JavaScript - Vue',
-  <% if (features.foundation) { %>client: {
-    // only applicable if using Foundation (yeoman generator option)
-    foundation: {
-      plugins: [] // JS plugins to bundle with the client
-    }
-  },<% } %>
-  server: {
-    port: process.env.PORT || 3000,
+  port: process.env.PORT || 3000,
+  api: {
+    base: '/api',
+    mock: false
+  },
 
-    <% if (features.keystone) { %>// only applicable if using KeystoneJS (yeoman generator option)
-    keystone: {
-      base: '/cms',
-      mock: false
-    },<% } %>
-
-    <% if (features.proxy) { %>// only applicable if using the API proxy (yeoman generator option)
-    proxy: {
-      base: '/api',
-      target: 'https://api.example-host.com',
-      headers: {},
-      mock: true
-    }<% } %>
-  }
+  <% if (features.foundation) { %>// only applicable if using Foundation (yeoman generator option)
+  foundation: {
+    plugins: [] // JS plugins to bundle with the client
+  }<% } %>
 };
 ```
+
+Additionally, the following configuration files are consumed:
+
+- `config/webpack.client.config.js` - used for building the client bundle (extends `webpack.base.config`)
+- `config/webpack.server.config.js` - used for building the server bundle (extends `webpack.base.config`)
+<% if (features.keystone) { %>- `config/keystone.config.js` - configuration passed to [KeystoneJS](http://keystonejs.com/docs/configuration/), if enabled
+<% } %>- `postcss.config.js` - configuration past to [PostCSS](https://github.com/michael-ciniawsky/postcss-load-config)
 
 ## License
 

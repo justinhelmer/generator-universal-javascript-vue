@@ -5,8 +5,9 @@
  *
  * Does the following:
  *   1) Bootstraps the client app, router, and data store
- *   2) Informs the router to fetch asynchronous data when routing between routes, before resolving the route
- *   3) Mounts the app to the DOM
+ *   2) Attaches client-side cookie library
+ *   3) Informs the router to fetch asynchronous data when routing between routes, before resolving the route
+ *   4) Mounts the app to the DOM
  *
  * If SSR is enabled, the app-server will use main.server.js as its entry point. All async data requests are pre-fetched
  * in order to make SSR possible. The results of the pre-fetched requests are stored in the shared data store
@@ -19,6 +20,15 @@
  * @see src/main.server.js
  * @see src/core/store.js
  */
+import Vue from 'vue';
+import Cookies from './lib/cookies';
+
+Vue.use({
+  install: (Vue) => {
+    Vue.cookies = new Cookies();
+  }
+});
+
 import {createApp} from './app';
 const {app, router, store} = createApp();
 

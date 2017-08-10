@@ -13,11 +13,12 @@
  * @see src/main.server.js
  */
 
-const config = require('../../config');
 const fs = require('fs');
 const LRU = require('lru-cache');
 const path = require('path');
 const {createBundleRenderer} = require('vue-server-renderer');
+const config = require('../../config');
+const uidCookie = require('../lib/uid-cookie');
 
 const isProd = process.env.NODE_ENV === 'production';
 const resolve = file => path.resolve(__dirname, file);
@@ -54,7 +55,7 @@ module.exports = app => {
     renderer = createRenderer(bundle, {clientManifest});
   } else {
     // setup the dev server with watch and hot-reload, and create a new renderer on bundle / index template update.
-    enableHMR = require('../hmr')(app, (bundle, options) => {
+    enableHMR = require('../lib/hmr')(app, (bundle, options) => {
       renderer = createRenderer(bundle, options);
     });
   }
@@ -65,10 +66,12 @@ module.exports = app => {
 
   function render(req, res) {
     res.setHeader('Content-Type', 'text/html');
+    uidCookie.set(req, res);
 
     const context = {
       title: config.title,
-      url: req.url
+      url: req.url,
+      cookie: req.headers.cookie
     };
 
     renderer.renderToString(context, (err, html) => {

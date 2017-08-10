@@ -1,5 +1,5 @@
 <template>
-    <div id="items" class="content">
+    <div id="items"<% if (features.foundation) { %> class="content"<% } %>>
         <h1>Items</h1>
         <ul class="list">
             <li v-for="item in items">
@@ -15,8 +15,7 @@
 
     asyncData ({ store }) {
       return store.dispatch('fetch', {
-        endpoint: '<% if (features.keystone) { %>/cms/item<% } else { %>/api/item<% } %>',
-        store: 'items'
+        endpoint: 'items'
       });
     },
 

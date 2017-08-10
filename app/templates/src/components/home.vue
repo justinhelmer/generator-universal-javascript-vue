@@ -1,5 +1,5 @@
 <template>
-    <div id="home" class="content">
+    <div id="home"<% if (features.foundation) { %> class="content"<% } %>>
         <h1>Welcome</h1>
         <router-link :to="{ name: 'items' }"<% if (features.foundation) { %> class="button"<% } %>>Items</router-link>
     </div>

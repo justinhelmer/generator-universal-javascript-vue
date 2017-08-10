@@ -18,29 +18,34 @@ fs.remove(templatePath)
 
     featureWrap('foundation', '- _(optional)_ Full [Foundation](http://foundation.zurb.com/) integration\n'),
     featureWrap('fontawesome', '- _(optional)_ Full [Font Awesome](http://fontawesome.io/) integration\n'),
-    featureWrap('keystone', '- _(optional)_ Full content management system (CMS) built on [KeystoneJS](http://keystonejs.com/)\n'),
-    featureWrap('proxy', '- _(optional)_ Centralized API proxy using [Axios](https://github.com/vuejs/vuex), with ready-to-go [data prefetching](https://ssr.vuejs.org/en/data.html) and a built-in mock server using [JSON Server](https://github.com/typicode/json-server).\n'),
+    featureWrap('keystone', '- _(optional)_ Full content management system (CMS) built on [KeystoneJS](http://keystonejs.com/), including API routes for authenticating and retrieving data\n'),
 
-    featureWrap('foundation', `client: {
-    // only applicable if using Foundation (yeoman generator option)
-    foundation: {
-      plugins: [] // JS plugins to bundle with the client
-    }
-  },`),
+    featureWrap('keystone', `#### If using [KeystoneJS](http://keystonejs.com/) (yeoman generator option):
 
-    featureWrap('keystone', `// only applicable if using KeystoneJS (yeoman generator option)
-    keystone: {
-      base: '/cms',
-      mock: false
-    },`),
+When serving in **production** mode, the assumption is that a \`mongo\` instance is already running, at the url specified by \`config/keystone.config.js\`:
 
-    featureWrap('proxy', `// only applicable if using the API proxy (yeoman generator option)
-    proxy: {
-      base: '/api',
-      target: 'https://api.example-host.com',
-      headers: {},
-      mock: true
-    }`),
+\`\`\`js
+module.exports = {
+  // ...
+  'mongo': 'mongodb://localhost:27017/' + pkg.name,
+  // ...
+};
+\`\`\`
+
+You can also launch the a local \`mongo\` instance using:
+
+\`\`\`bash
+npm run db
+\`\`\`
+> Simply an alias for \`mongod\`
+`),
+
+    featureWrap('foundation', `// only applicable if using Foundation (yeoman generator option)
+  foundation: {
+    plugins: [] // JS plugins to bundle with the client
+  }`),
+
+    featureWrap('keystone', '- `config/keystone.config.js` - configuration passed to [KeystoneJS](http://keystonejs.com/docs/configuration/), if enabled\n')
   ]))
   .then(() => templatize('config/index.js', [
     {
@@ -48,23 +53,11 @@ fs.remove(templatePath)
       replace: '<%= config.title %>'
     },
 
-    featureWrap('foundation', `client: {
-    foundation: {
-      plugins: [] // JS plugins to bundle with the client
-    }
-  },`),
+    featureWrap('foundation', `foundation: {
+    plugins: []
+  }`),
 
-    featureWrap('keystone', `keystone: {
-      base: '/cms',
-      mock: false
-    },`),
-
-    featureWrap('proxy', `proxy: {
-      base: '/api',
-      target: '',
-      headers: {},
-      mock: true
-    }`),
+    featureWrap('keystone', 'mock: false', 'mock: true')
   ]))
   .then(() => templatize('config/css-loader.config.js', [
     featureWrap('fontawesome', `alias: {
@@ -87,7 +80,7 @@ fs.remove(templatePath)
 
     featureWrap('foundation', `beforeMount: function () {
       require('./lib/foundation')({
-        plugins: config.client.foundation.plugins || []
+        plugins: config.foundation.plugins || []
       });
     }`),
 
@@ -100,6 +93,7 @@ fs.remove(templatePath)
     @include foundation-top-bar;
     @include foundation-xy-grid-classes;
     @include foundation-typography;
+    @include foundation-forms;
     @include foundation-button;
     @include foundation-visibility-classes;
     @include foundation-flex-classes;
@@ -124,23 +118,15 @@ fs.remove(templatePath)
     featureWrap('fontawesome', '@import \'font-awesome\';')
   ]))
   .then(() => templatize('src/components/global/header.vue', [
-    featureWrap('keystone', `<div class="top-bar-right">
-                <ul class="menu align-right">
-                    <li>
-                        <a href="/keystone">
-                            <i class="fa fa-cog"></i><span class="show-for-medium">Admin Dashboard</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>`),
-
     featureWrap('foundation', ' class="top-bar"'),
     featureWrap('foundation', ' class="top-bar-left"'),
     featureWrap('foundation', ' class="top-bar-right"'),
     featureWrap('foundation', ' class="menu"'),
     featureWrap('foundation', ' class="menu align-right"'),
     featureWrap('foundation', '<i class="fa fa-home"></i><span class="show-for-medium">Home</span>', 'Home'),
-    featureWrap('foundation', '<i class="fa fa-cog"></i><span class="show-for-medium">Admin Dashboard</span>', 'Admin Dashboard'),
+    featureWrap('foundation', '<i class="fa fa-user"></i><span class="show-for-medium">Profile</span>', 'Profile'),
+    featureWrap('foundation', '<i class="fa fa-sign-in"></i><span class="show-for-medium">Login</span>', 'Login'),
+    featureWrap('foundation', '<i class="fa fa-sign-out"></i><span class="show-for-medium">Logout</span>', 'Logout'),
 
     featureWrap('foundation', `@import '../../css/settings';
 
@@ -156,37 +142,42 @@ fs.remove(templatePath)
     }`),
   ]))
   .then(() => templatize('src/components/home.vue', [
+    featureWrap('foundation', ' class="content"'),
     featureWrap('foundation', ' class="button"')
   ]))
   .then(() => templatize('src/components/items.vue', [
-    featureWrap('keystone', '/cms/item', '/api/item')
+    featureWrap('keystone', '/cms/item', '/api/item'),
+    featureWrap('foundation', ' class="content"')
   ]))
   .then(() => templatize('src/components/item.vue', [
     featureWrap('keystone', '/cms/item', '/api/item'),
+    featureWrap('foundation', ' class="content"'),
     featureWrap('foundation', ' class="button"')
+  ]))
+  .then(() => templatize('src/components/login.vue', [
+    featureWrap('foundation', ' class="content"')
+  ]))
+  .then(() => templatize('src/components/profile.vue', [
+    featureWrap('foundation', ' class="content"'),
+    featureWrap('keystone', '<a v-if="user.canAccessKeystone" href="/keystone/signin" class="button">Admin Dashboard</a>')
   ]))
   .then(() => templatize('server/index.js', [
     featureWrap('keystone', `const keystone = require('keystone');
-require('./models');
+require('./keystone/models');
 
 keystone.init(require('../config/keystone.config'));
 keystone.set('routes', require('./routes'));
 
-keystone.start(() => {
-  if (process.env.NODE_ENV !== 'production') {
-    console.log('Compiling...');
-  }
-});`, `const express = require('express');
+keystone.start();`, `const express = require('express');
 const config = require('../config');
 
 const app = express();
 require('./routes')(app);
 
-app.listen(config.server.port);`)
+app.listen(config.port);`)
   ]))
-  .then(() => templatize('server/routes/index.js', [
-    featureWrap('keystone', ' require(\'../keystone\')(app);'),
-    featureWrap('proxy', ' require(\'../proxy\')(app);'),
+  .then(() => templatize('server/routes/api/index.js', [
+    featureWrap('keystone', 'require(\'./query\')(app, base);')
   ]));
 
 function featureWrap(feature, search, disabled) {
