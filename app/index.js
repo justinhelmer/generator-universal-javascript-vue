@@ -91,9 +91,9 @@ module.exports = class extends Generator {
 }`);
   }
 
-  // install() {
-  //   this.installDependencies({ npm: true, bower: false, yarn: false, callback: () => {
-  //     this.log('Done! Use `npm run dev` to launch the application')
-  //   }});
-  // }
+  install() {
+    this.installDependencies({ npm: true, bower: false, yarn: false, callback: () => {
+      this.log('Done! Use `npm run dev` to launch the application')
+    }});
+  }
 };
