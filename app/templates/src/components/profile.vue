@@ -4,8 +4,8 @@
         <h3>Email address</h3>
         <div>{{user.email}}</div>
         <hr/>
-        <% if (features.keystone) { %><a v-if="user.canAccessKeystone" href="/keystone/signin" class="button">Admin Dashboard</a>
-<% } %>    </div>
+        <% if (features.keystone) { %><a v-if="user.canAccessKeystone" href="/keystone/signin" class="button">Admin Dashboard</a><% } %>
+    </div>
 </template>
 
 <script>
@@ -32,7 +32,7 @@
         const name = this.$store.state.global.user.name;
 
         if (name) {
-          return this.$store.state.global.user.name.first + ' ' + this.$store.state.global.user.name.last;
+          return name.first + ' ' + name.last;
         }
 
         return '';

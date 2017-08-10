@@ -3,7 +3,7 @@ module.exports = {
   port: process.env.PORT || 3000,
   api: {
     base: '/api',
-    mock: true
+    <% if (features.keystone) { %>mock: false<% } else { %>mock: true<% } %>
   },
   <% if (features.foundation) { %>foundation: {
     plugins: []
