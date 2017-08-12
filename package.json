@@ -1,6 +1,6 @@
 {
   "name": "generator-universal-javascript-vue",
-  "version": "1.3.6",
+  "version": "1.3.7",
   "description": "A Yeoman generator for universal-javascript-vue.",
   "author": "Justin Helmer",
   "license": "MIT",
