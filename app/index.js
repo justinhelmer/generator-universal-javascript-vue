@@ -42,7 +42,7 @@ module.exports = class extends Generator {
 
   write() {
     this.fs.copyTpl(
-      this.templatePath('**/*.@(html|js|md|vue)'),
+      this.templatePath('**/*.@(html|js|md|vue|css|scss)'),
       this.destinationPath(),
       { config: this.config, features: this.features }
     );
