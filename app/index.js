@@ -55,6 +55,7 @@ module.exports = class extends Generator {
     );
 
     this.fs.copy(this.templatePath('public/*'), this.destinationPath('public'));
+    this.fs.move(this.destinationPath('.npmignore'), this.destinationPath('.gitignore'));
 
     if (!this.features.foundation) {
       this.fs.delete(this.destinationPath('src/lib/foundation.js'));

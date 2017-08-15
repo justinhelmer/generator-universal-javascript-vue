@@ -8,7 +8,6 @@ const templatePath = path.resolve(__dirname, '../app/templates');
 
 fs.remove(templatePath)
   .then(() => fs.copy(modulePath, templatePath))
-  .then(() => fs.move(templatePath + '/.npmignore', templatePath + '/.gitignore'))
   .then(() => fs.remove(templatePath + '/package.json'))
   .then(() => templatize('README.md', [
     {
