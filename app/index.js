@@ -54,7 +54,7 @@ module.exports = class extends Generator {
       }
     );
 
-    this.fs.copy(this.templatePath('public/**'), this.destinationPath());
+    this.fs.copy(this.templatePath('public/**'), this.destinationPath('public'));
 
     if (!this.features.foundation) {
       this.fs.delete(this.destinationPath('src/lib/foundation.js'));
