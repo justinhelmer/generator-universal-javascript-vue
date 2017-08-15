@@ -42,19 +42,19 @@ module.exports = class extends Generator {
 
   write() {
     this.fs.copyTpl(
-      this.templatePath('{.*,*/**}'), // matches all files, including root dotfiles
+      this.templatePath('{.*,**/*}'), // matches all files, including root dotfiles
       this.destinationPath(),
       { config: this.config, features: this.features },
       null,
       {
         globOptions: {
           // public directory contains binary assets (i.e. images) that will throw EJS error if passed to copyTpl()
-          ignore: this.templatePath('public/**')
+          ignore: this.templatePath('public/*')
         }
       }
     );
 
-    this.fs.copy(this.templatePath('public/**'), this.destinationPath('public'));
+    this.fs.copy(this.templatePath('public/*'), this.destinationPath('public'));
 
     if (!this.features.foundation) {
       this.fs.delete(this.destinationPath('src/lib/foundation.js'));
