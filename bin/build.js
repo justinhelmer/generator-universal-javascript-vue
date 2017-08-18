@@ -19,6 +19,7 @@ fs.remove(templatePath)
     featureWrap('fontawesome', '- _(optional)_ Full [Font Awesome](http://fontawesome.io/) integration\n'),
     featureWrap('keystone', '- _(optional)_ Full content management system (CMS) built on [KeystoneJS](http://keystonejs.com/), including API routes for authenticating and retrieving data\n'),
 
+    featureWrap('keystone', 'If using [KeystoneJS](http://keystonejs.com/), you must also install [MongoDB](https://docs.mongodb.com/manual/installation/).\n'),
     featureWrap('keystone', `#### If using [KeystoneJS](http://keystonejs.com/) (yeoman generator option):
 
 When serving in **production** mode, the assumption is that a \`mongo\` instance is already running, at the url specified by \`config/keystone.config.js\`:
